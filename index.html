@@ -97,13 +97,12 @@
     textarea::placeholder { color: #9aa0a6; }
 
     .output-area {
-      display: block; width: 100%; padding: 16px 48px 16px 16px;
+      display: block; width: 100%; padding: 16px 16px 16px 16px;
       font-size: 18px; line-height: 1.6; color: #202124;
       white-space: pre-wrap; word-break: break-word;
       background: #f8f9fa; min-height: 200px;
-      vertical-align: top; text-align: left;
     }
-    .output-placeholder { color: #9aa0a6; display: block; }
+    .output-area.empty { color: #9aa0a6; }
 
     /* CLEAR & STAR */
     .panel-action {
@@ -218,7 +217,7 @@
       <!-- LEFT CARD -->
       <div class="card" id="leftCard">
         <div class="lang-bar">
-          <button class="lang-tab active">Enter text</button>
+          <button class="lang-tab active">English</button>
           <button class="lang-more"><span class="material-symbols-outlined" style="font-size:20px">expand_more</span></button>
         </div>
         <div class="panel-body">
@@ -254,9 +253,7 @@
           <button class="lang-more"><span class="material-symbols-outlined" style="font-size:20px">expand_more</span></button>
         </div>
         <div class="panel-body">
-          <div id="output" class="output-area">
-            <span class="output-placeholder">Translation</span>
-          </div>
+          <div id="output" class="output-area empty">Translation</div>
         </div>
         <div class="panel-footer right">
           <div class="footer-icons">
@@ -339,7 +336,7 @@
       inputEl.style.height = "200px";
       charCount.innerText = "0 / 500";
       clearBtn.classList.add("hidden");
-      outputEl.innerHTML = `<span class="output-placeholder">Translation</span>`;
+      outputEl.className = 'output-area empty'; outputEl.textContent = 'Translation';
       clearTimeout(debounceTimer);
       syncHeight();
     }
@@ -348,11 +345,12 @@
     async function generatePost() {
       const input = inputEl.value.trim();
       if (!input) {
-        outputEl.innerHTML = `<span class="output-placeholder">Translation</span>`;
+        outputEl.className = 'output-area empty'; outputEl.textContent = 'Translation';
         syncHeight();
         return;
       }
       // "Translating" static + animated dots
+      outputEl.className = 'output-area';
       outputEl.innerHTML = `<span class="translating-label">Translating<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></span>`;
       syncHeight();
       try {
@@ -371,6 +369,7 @@
 
     /* ── TYPE EFFECT ── */
     function typeEffect(text) {
+      outputEl.className = 'output-area';
       outputEl.innerHTML = "";
       let i = 0;
       const iv = setInterval(() => {
@@ -388,7 +387,7 @@
     /* ── COPY ── */
     function copyText() {
       const text = outputEl.innerText.trim();
-      if (!text || text === "Translation") return;
+      if (!text || outputEl.classList.contains('empty')) return;
       navigator.clipboard.writeText(text).then(() => {
         toast.classList.add("show");
         clearTimeout(window._toastTimer);
