@@ -109,7 +109,7 @@
     inputEl.addEventListener("input", () => {
       charCount.innerText = `${inputEl.value.length} / 500`;
       clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(generatePost, 200 + Math.random()*200);
+      debounceTimer = setTimeout(generatePost, 1500);
     });
     document.addEventListener("keydown", (e) => {
       if (e.ctrlKey && e.key === "Enter") generatePost();

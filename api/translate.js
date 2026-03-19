@@ -17,6 +17,8 @@ Tone: ${toneGuide[tone] || toneGuide.default}
 Input: ${input}
 Make it dramatic, insightful, and add relevant hashtags. Keep it under 300 words.`;
 
+  console.log(`[translate] called — tone: ${tone}, input length: ${input?.length}`);
+
   try {
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
@@ -28,9 +30,11 @@ Make it dramatic, insightful, and add relevant hashtags. Keep it under 300 words
     );
     const data = await response.json();
     if (!response.ok) {
+      console.error(`[translate] Gemini error ${response.status}:`, JSON.stringify(data.error));
       return res.status(200).json({ output: `Gemini error: ${JSON.stringify(data.error)}` });
     }
     const output = data.candidates?.[0]?.content?.parts?.[0]?.text || "Something went wrong";
+    console.log(`[translate] success — output length: ${output.length}`);
     res.status(200).json({ output });
   } catch (err) {
     res.status(200).json({ output: `Server error: ${err.message}` });
