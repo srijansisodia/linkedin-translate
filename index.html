@@ -76,6 +76,7 @@
           </button>
         </div>
         <div class="flex-1 px-4 py-3">LinkedIn</div>
+        <button onclick="generatePost()" class="mx-3 px-4 py-1 bg-[#1a73e8] text-white text-sm rounded hover:bg-[#1557b0] transition ripple">Translate</button>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2">
         <div id="inputPanel" class="panel border-r">
@@ -103,13 +104,10 @@
     const charCount = document.getElementById("charCount");
     const inputPanel = document.getElementById("inputPanel");
     const clickSound = document.getElementById("clickSound");
-    let debounceTimer;
     inputEl.addEventListener("focus", () => inputPanel.classList.add("active"));
     inputEl.addEventListener("blur", () => inputPanel.classList.remove("active"));
     inputEl.addEventListener("input", () => {
       charCount.innerText = `${inputEl.value.length} / 500`;
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(generatePost, 1500);
     });
     document.addEventListener("keydown", (e) => {
       if (e.ctrlKey && e.key === "Enter") generatePost();
