@@ -200,7 +200,8 @@
     @media (max-width: 640px) {
       .translator-layout { flex-direction: column; gap: 12px; }
       .swap-col { width: 100%; padding: 0; justify-content: center; transform: rotate(90deg); }
-      textarea, .output-area { font-size: 16px; }
+      .card { width: 100%; }
+      textarea, .output-area { font-size: 16px; min-height: 200px; }
       .lang-tab { font-size: 13px; padding: 11px 8px 9px; }
       .page { margin: 16px auto; }
     }
@@ -300,11 +301,11 @@
     let selectedTone = "default";
     let debounceTimer;
 
-    /* ── HEIGHT SYNC ── keep both cards the same height */
+    /* ── HEIGHT SYNC ── desktop only (cards are side by side) */
     function syncHeight() {
-      // Reset first so we measure natural height
       leftCard.style.minHeight  = "";
       rightCard.style.minHeight = "";
+      if (window.innerWidth <= 640) return; // mobile: CSS handles it
       const h = Math.max(leftCard.offsetHeight, rightCard.offsetHeight);
       leftCard.style.minHeight  = h + "px";
       rightCard.style.minHeight = h + "px";
