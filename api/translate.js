@@ -27,9 +27,12 @@ Make it dramatic, insightful, and add relevant hashtags. Keep it under 300 words
       }
     );
     const data = await response.json();
+    if (!response.ok) {
+      return res.status(200).json({ output: `Gemini error: ${JSON.stringify(data.error)}` });
+    }
     const output = data.candidates?.[0]?.content?.parts?.[0]?.text || "Something went wrong";
     res.status(200).json({ output });
   } catch (err) {
-    res.status(500).json({ error: "Server error" });
+    res.status(200).json({ output: `Server error: ${err.message}` });
   }
 }
