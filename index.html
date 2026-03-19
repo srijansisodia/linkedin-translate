@@ -4,126 +4,306 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LinkedIn Translate</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
   <style>
-    body { font-family: 'Roboto', sans-serif; }
-    .material-symbols-outlined {
-      font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Google Sans', 'Roboto', sans-serif; background: #fff; color: #202124; }
+
+    /* NAV */
+    .navbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 16px; border-bottom: 1px solid #e0e0e0; height: 64px;
     }
+    .navbar-left { display: flex; align-items: center; gap: 12px; }
+    .nav-icon-btn {
+      width: 40px; height: 40px; border-radius: 50%; border: none;
+      background: none; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; color: #5f6368;
+    }
+    .nav-icon-btn:hover { background: #f1f3f4; }
+    .logo { display: flex; align-items: center; gap: 6px; font-size: 22px; font-weight: 400; }
+    .logo-g { color: #4285f4; }
+    .logo-o1 { color: #ea4335; }
+    .logo-o2 { color: #fbbc05; }
+    .logo-g2 { color: #4285f4; }
+    .logo-l { color: #34a853; }
+    .logo-e { color: #ea4335; }
+    .logo-rest { color: #202124; }
+    .navbar-right { display: flex; align-items: center; gap: 4px; }
+    .avatar {
+      width: 32px; height: 32px; border-radius: 50%; background: #1a73e8;
+      color: white; font-size: 14px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; margin-left: 4px;
+    }
+
+    /* TABS */
+    .tab-bar { display: flex; align-items: center; padding: 8px 24px; gap: 4px; }
+    .tab-pill {
+      display: flex; align-items: center; gap: 8px; padding: 8px 16px;
+      border-radius: 20px; border: 1px solid #dadce0; font-size: 14px;
+      cursor: pointer; color: #202124; background: none; font-family: inherit;
+      transition: background 0.15s;
+    }
+    .tab-pill.active { background: #e8f0fe; border-color: #c5cae9; color: #1a73e8; }
+    .tab-pill:hover:not(.active) { background: #f1f3f4; }
+    .tab-pill .material-symbols-outlined { font-size: 18px; }
+
+    /* MAIN CONTAINER */
+    .main { max-width: 860px; margin: 16px auto; padding: 0 16px; }
+    .card {
+      border: 1px solid #dadce0; border-radius: 12px; overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    /* LANGUAGE BARS */
+    .lang-bars { display: grid; grid-template-columns: 1fr auto 1fr; border-bottom: 1px solid #e0e0e0; }
+    .lang-bar { display: flex; align-items: center; padding: 0 8px; overflow: hidden; }
+    .lang-bar.right { background: #f8f9fa; }
+    .lang-btn {
+      padding: 12px 10px 10px; font-size: 14px; border: none; background: none;
+      cursor: pointer; color: #5f6368; font-family: inherit; position: relative;
+      white-space: nowrap; transition: color 0.15s;
+    }
+    .lang-btn::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 3px; background: #1a73e8; border-radius: 3px 3px 0 0;
+      opacity: 0; transition: opacity 0.15s;
+    }
+    .lang-btn.active { color: #1a73e8; font-weight: 500; }
+    .lang-btn.active::after { opacity: 1; }
+    .lang-btn:hover:not(.active) { color: #202124; background: #f1f3f4; }
+    .lang-more {
+      padding: 8px 4px; border: none; background: none; cursor: pointer;
+      color: #5f6368; display: flex; align-items: center;
+    }
+    .swap-col { display: flex; align-items: center; justify-content: center; padding: 0 4px; }
+    .swap-btn {
+      width: 36px; height: 36px; border-radius: 50%; border: 1px solid #dadce0;
+      background: #fff; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; color: #5f6368; transition: background 0.15s;
+    }
+    .swap-btn:hover { background: #f1f3f4; }
+
+    /* PANELS */
+    .panels { display: grid; grid-template-columns: 1fr 1fr; }
     .panel { position: relative; }
-    .panel::after {
-      content: "";
-      position: absolute;
-      left: 0; bottom: 0;
-      height: 2px; width: 0%;
-      background: #1a73e8;
-      transition: width 0.25s ease;
+    .panel-left { border-right: 1px solid #e0e0e0; }
+    .panel-right { background: #f8f9fa; }
+
+    textarea {
+      width: 100%; height: 200px; padding: 16px; font-size: 18px;
+      border: none; outline: none; resize: none; background: transparent;
+      font-family: 'Google Sans', 'Roboto', sans-serif; color: #202124;
+      line-height: 1.5;
     }
-    .panel.active::after { width: 100%; }
-    .icon:hover { color: black; }
-    .ripple { position: relative; overflow: hidden; }
-    .ripple:after {
-      content: "";
-      position: absolute;
-      width: 100px; height: 100px;
-      background: rgba(0,0,0,0.1);
-      border-radius: 50%;
-      transform: scale(0); opacity: 0;
+    textarea::placeholder { color: #9aa0a6; }
+
+    .output-text {
+      height: 200px; padding: 16px; font-size: 18px; color: #1a73e8;
+      line-height: 1.5; overflow-y: auto; white-space: pre-line;
+      min-height: 200px;
     }
-    .ripple:active:after {
-      transform: scale(2); opacity: 1;
-      transition: transform 0.4s, opacity 0.8s;
+    .output-placeholder { color: #9aa0a6; font-size: 18px; }
+
+    /* PANEL FOOTERS */
+    .panel-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 12px; border-top: 1px solid #e0e0e0;
     }
+    .panel-footer-right { background: #f8f9fa; }
+    .footer-left { display: flex; align-items: center; gap: 4px; }
+    .footer-right { display: flex; align-items: center; gap: 4px; }
+    .icon-btn {
+      width: 36px; height: 36px; border-radius: 50%; border: none;
+      background: none; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; color: #5f6368; transition: background 0.15s;
+    }
+    .icon-btn:hover { background: #e8f0fe; color: #1a73e8; }
+    .icon-btn .material-symbols-outlined { font-size: 20px; }
+    .char-count { font-size: 12px; color: #9aa0a6; padding: 0 4px; }
+
+    /* HISTORY / SAVED */
+    .bottom-section {
+      display: flex; justify-content: center; gap: 32px;
+      margin-top: 32px; padding-bottom: 32px;
+    }
+    .bottom-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      cursor: pointer; border: none; background: none; font-family: inherit;
+    }
+    .bottom-btn-circle {
+      width: 56px; height: 56px; border-radius: 50%; border: 1px solid #dadce0;
+      display: flex; align-items: center; justify-content: center; color: #5f6368;
+      transition: background 0.15s;
+    }
+    .bottom-btn:hover .bottom-btn-circle { background: #f1f3f4; }
+    .bottom-btn span.label { font-size: 13px; color: #1a73e8; }
+
+    /* SHIMMER */
     .shimmer {
-      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background: linear-gradient(90deg, #e8f0fe 25%, #d2e3fc 50%, #e8f0fe 75%);
       background-size: 200% 100%;
       animation: shimmer 1.2s infinite;
-      color: transparent;
+      color: transparent; border-radius: 4px;
+      display: inline-block; width: 80%;
     }
     @keyframes shimmer {
       0% { background-position: -200% 0; }
       100% { background-position: 200% 0; }
     }
     .caret {
-      display: inline-block;
-      width: 1px;
-      background: black;
+      display: inline-block; width: 2px; height: 1.2em;
+      background: #1a73e8; vertical-align: text-bottom;
       animation: blink 1s infinite;
     }
     @keyframes blink { 50% { opacity: 0; } }
   </style>
 </head>
-<body class="bg-[#f8f9fa] min-h-screen">
-  <div class="bg-white border-b h-14 flex items-center px-6 justify-between">
-    <div class="text-[20px] text-gray-700 tracking-tight">LinkedIn Translate</div>
-    <select id="tone" class="text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none">
-      <option value="default">Default</option>
-      <option value="hustle">Hustle Bro</option>
-      <option value="zen">Mindful Guru</option>
-      <option value="corporate">Corporate Strategist</option>
-    </select>
-  </div>
-  <div class="max-w-6xl mx-auto mt-12">
-    <div class="border border-gray-300 rounded-lg bg-white overflow-hidden">
-      <div class="relative grid grid-cols-2 text-sm text-gray-600 border-b">
-        <div class="px-4 py-3 border-r">Detect language</div>
-        <div class="px-4 py-3">LinkedIn</div>
-        <button class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-1.5 rounded-full bg-white border border-gray-200 hover:bg-gray-100 transition z-10">
-          <span class="material-symbols-outlined text-gray-600 text-[18px]">swap_horiz</span>
-        </button>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2">
-        <div id="inputPanel" class="panel border-r">
-          <textarea id="input" class="w-full h-[320px] p-4 text-[18px] outline-none resize-none" placeholder="Enter text"></textarea>
-          <div class="absolute bottom-2 left-3 flex gap-4 text-gray-500">
-            <span class="material-symbols-outlined icon cursor-pointer">keyboard</span>
-            <span class="material-symbols-outlined icon cursor-pointer">mic</span>
-          </div>
-          <div class="absolute bottom-2 right-3 text-xs text-gray-400" id="charCount">0 / 500</div>
-        </div>
-        <div id="outputPanel" class="panel bg-[#f8f9fa]">
-          <div id="output" class="p-4 h-[320px] text-[18px] whitespace-pre-line overflow-auto"></div>
-          <div class="absolute bottom-2 left-3 flex gap-4 text-gray-500">
-            <span id="copyBtn" onclick="copyText()" class="material-symbols-outlined icon cursor-pointer">content_copy</span>
-            <span class="material-symbols-outlined icon cursor-pointer">volume_up</span>
-          </div>
-        </div>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar-left">
+      <button class="nav-icon-btn"><span class="material-symbols-outlined">menu</span></button>
+      <div class="logo">
+        <span class="logo-g">L</span><span class="logo-o1">i</span><span class="logo-o2">n</span><span class="logo-g2">k</span><span class="logo-l">e</span><span class="logo-e">d</span><span class="logo-rest">In Translate</span>
       </div>
     </div>
+    <div class="navbar-right">
+      <button class="nav-icon-btn"><span class="material-symbols-outlined">settings</span></button>
+      <button class="nav-icon-btn"><span class="material-symbols-outlined">apps</span></button>
+      <div class="avatar">S</div>
+    </div>
+  </nav>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab-pill active">
+      <span class="material-symbols-outlined">translate</span> Text
+    </button>
+    <button class="tab-pill">
+      <span class="material-symbols-outlined">image</span> Images
+    </button>
+    <button class="tab-pill">
+      <span class="material-symbols-outlined">description</span> Documents
+    </button>
+    <button class="tab-pill">
+      <span class="material-symbols-outlined">language</span> Websites
+    </button>
   </div>
-  <audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="card">
+
+      <!-- LANGUAGE BARS -->
+      <div class="lang-bars">
+        <div class="lang-bar">
+          <button class="lang-btn active">Detect language</button>
+          <button class="lang-btn" onclick="setTone('hustle', this)">Hustle Bro</button>
+          <button class="lang-btn" onclick="setTone('zen', this)">Mindful Guru</button>
+          <button class="lang-more"><span class="material-symbols-outlined" style="font-size:18px">expand_more</span></button>
+        </div>
+        <div class="swap-col">
+          <button class="swap-btn"><span class="material-symbols-outlined" style="font-size:18px">swap_horiz</span></button>
+        </div>
+        <div class="lang-bar right">
+          <button class="lang-btn active" style="color:#1a73e8">LinkedIn</button>
+          <button class="lang-btn" onclick="setTone('corporate', this)">Corporate</button>
+          <button class="lang-btn" onclick="setTone('default', this)">Default</button>
+          <button class="lang-more"><span class="material-symbols-outlined" style="font-size:18px">expand_more</span></button>
+        </div>
+      </div>
+
+      <!-- PANELS -->
+      <div class="panels">
+        <div class="panel panel-left">
+          <textarea id="input" placeholder="Enter text" maxlength="500"></textarea>
+        </div>
+        <div class="panel panel-right">
+          <div id="output" class="output-text">
+            <span class="output-placeholder">Translation</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTERS -->
+      <div style="display:grid;grid-template-columns:1fr 1fr">
+        <div class="panel-footer">
+          <div class="footer-left">
+            <button class="icon-btn"><span class="material-symbols-outlined">mic</span></button>
+            <button class="icon-btn"><span class="material-symbols-outlined">image</span></button>
+          </div>
+          <div class="footer-right">
+            <span class="char-count" id="charCount">0 / 500</span>
+            <button class="icon-btn"><span class="material-symbols-outlined">edit</span></button>
+          </div>
+        </div>
+        <div class="panel-footer panel-footer-right">
+          <div class="footer-left">
+            <button id="copyBtn" class="icon-btn" onclick="copyText()"><span class="material-symbols-outlined">content_copy</span></button>
+            <button class="icon-btn"><span class="material-symbols-outlined">volume_up</span></button>
+            <button class="icon-btn"><span class="material-symbols-outlined">share</span></button>
+          </div>
+          <div class="footer-right">
+            <button class="icon-btn"><span class="material-symbols-outlined">thumb_up</span></button>
+            <button class="icon-btn"><span class="material-symbols-outlined">thumb_down</span></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- HISTORY / SAVED -->
+    <div class="bottom-section">
+      <button class="bottom-btn">
+        <div class="bottom-btn-circle"><span class="material-symbols-outlined">history</span></div>
+        <span class="label">History</span>
+      </button>
+      <button class="bottom-btn">
+        <div class="bottom-btn-circle"><span class="material-symbols-outlined">star</span></div>
+        <span class="label">Saved</span>
+      </button>
+    </div>
+  </div>
+
   <script>
     const inputEl = document.getElementById("input");
     const outputEl = document.getElementById("output");
     const charCount = document.getElementById("charCount");
-    const inputPanel = document.getElementById("inputPanel");
-    const clickSound = document.getElementById("clickSound");
     const copyBtn = document.getElementById("copyBtn");
+    let selectedTone = "default";
     let debounceTimer;
 
-    inputEl.addEventListener("focus", () => inputPanel.classList.add("active"));
-    inputEl.addEventListener("blur", () => inputPanel.classList.remove("active"));
     inputEl.addEventListener("input", () => {
       charCount.innerText = `${inputEl.value.length} / 500`;
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(generatePost, 1500);
     });
+
     document.addEventListener("keydown", (e) => {
       if (e.ctrlKey && e.key === "Enter") generatePost();
     });
 
+    function setTone(tone, btn) {
+      selectedTone = tone;
+      document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+    }
+
     async function generatePost() {
-      const input = inputEl.value;
-      const tone = document.getElementById("tone").value;
-      if (!input) { outputEl.innerText = ""; return; }
-      outputEl.innerHTML = `<span class='shimmer'>Translating...</span>`;
+      const input = inputEl.value.trim();
+      if (!input) {
+        outputEl.innerHTML = `<span class="output-placeholder">Translation</span>`;
+        return;
+      }
+      outputEl.innerHTML = `<span class="shimmer">Translating your story into LinkedIn gold...</span>`;
       try {
         const res = await fetch("/api/translate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ input, tone })
+          body: JSON.stringify({ input, tone: selectedTone })
         });
         const data = await res.json();
         typeEffect(data.output || "Something went wrong.");
@@ -136,22 +316,23 @@
       outputEl.innerHTML = "";
       let i = 0;
       const interval = setInterval(() => {
-        outputEl.innerHTML = text.slice(0, i) + "<span class='caret'>&nbsp;</span>";
+        outputEl.innerHTML = text.slice(0, i) + "<span class='caret'></span>";
         i++;
         if (i > text.length) {
           clearInterval(interval);
           outputEl.innerText = text;
         }
-      }, 10);
+      }, 12);
     }
 
     function copyText() {
       const text = outputEl.innerText.trim();
-      if (!text) return;
+      if (!text || text === "Translation") return;
       navigator.clipboard.writeText(text).then(() => {
-        copyBtn.innerText = "check";
-        clickSound.play();
-        setTimeout(() => { copyBtn.innerText = "content_copy"; }, 2000);
+        copyBtn.innerHTML = `<span class="material-symbols-outlined">check</span>`;
+        setTimeout(() => {
+          copyBtn.innerHTML = `<span class="material-symbols-outlined">content_copy</span>`;
+        }, 2000);
       });
     }
   </script>
