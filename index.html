@@ -8,138 +8,150 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Google Sans', 'Roboto', sans-serif; background: #fff; color: #202124; }
+    body { font-family: 'Google Sans', 'Roboto', sans-serif; background: #fff; color: #202124; min-height: 100vh; }
 
     /* NAV */
     .navbar {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 8px 16px; border-bottom: 1px solid #e0e0e0; height: 64px;
+      padding: 0 16px; height: 64px; border-bottom: 1px solid #e0e0e0;
     }
-    .logo { display: flex; align-items: center; font-size: 22px; font-weight: 400; }
+    .logo { font-size: 22px; display: flex; }
     .c1{color:#4285f4}.c2{color:#ea4335}.c3{color:#fbbc05}.c4{color:#4285f4}.c5{color:#34a853}.c6{color:#ea4335}.crest{color:#202124}
     .navbar-right { display: flex; align-items: center; gap: 4px; }
     .nav-icon-btn {
-      width: 40px; height: 40px; border-radius: 50%; border: none;
-      background: none; cursor: pointer; display: flex; align-items: center;
-      justify-content: center; color: #5f6368;
+      width: 40px; height: 40px; border-radius: 50%; border: none; background: none;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; color: #5f6368;
     }
     .nav-icon-btn:hover { background: #f1f3f4; }
     .avatar {
       width: 32px; height: 32px; border-radius: 50%; background: #1a73e8;
-      color: white; font-size: 14px; display: flex; align-items: center;
-      justify-content: center; cursor: pointer; margin-left: 4px;
+      color: #fff; font-size: 14px; font-weight: 500;
+      display: flex; align-items: center; justify-content: center; margin-left: 4px; cursor: pointer;
     }
 
-    /* MAIN LAYOUT */
-    .main {
-      max-width: 940px; margin: 32px auto; padding: 0 16px;
-      display: flex; align-items: stretch; gap: 0;
-    }
+    /* PAGE */
+    .page { max-width: 960px; margin: 40px auto; padding: 0 16px; }
 
-    /* CARDS */
+    /* CARD */
     .card {
-      flex: 1; border: 1px solid #dadce0; border-radius: 12px;
-      overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-      display: flex; flex-direction: column; min-width: 0;
+      border: 1px solid #dadce0; border-radius: 12px; overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
     }
-    .card-right { background: #f8f9fa; }
 
-    /* LANG BAR */
-    .lang-bar {
-      display: flex; align-items: center; border-bottom: 1px solid #e0e0e0;
-      padding: 0 8px; flex-shrink: 0; flex-wrap: nowrap; overflow: hidden;
+    /* LANG ROW — top of card */
+    .lang-row {
+      display: grid; grid-template-columns: 1fr 48px 1fr;
+      border-bottom: 1px solid #e0e0e0;
     }
-    .lang-bar-right { background: #f8f9fa; }
-    .lang-btn {
-      padding: 12px 10px 10px; font-size: 14px; border: none; background: none;
-      cursor: pointer; color: #5f6368; font-family: inherit; position: relative;
-      white-space: nowrap; transition: color 0.15s; flex-shrink: 0;
+    .lang-tabs {
+      display: flex; align-items: center; padding: 0 4px; overflow: hidden;
     }
-    .lang-btn::after {
+    .lang-tabs.right { background: #f8f9fa; }
+    .lang-tab {
+      padding: 13px 12px 11px; font-size: 14px; border: none; background: none;
+      cursor: pointer; color: #5f6368; font-family: inherit; white-space: nowrap;
+      position: relative; flex-shrink: 0; transition: color 0.15s;
+    }
+    .lang-tab::after {
       content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-      height: 3px; background: #1a73e8; border-radius: 3px 3px 0 0;
-      opacity: 0; transition: opacity 0.15s;
+      height: 3px; background: #1a73e8; border-radius: 3px 3px 0 0; opacity: 0;
     }
-    .lang-btn.active { color: #1a73e8; font-weight: 500; }
-    .lang-btn.active::after { opacity: 1; }
-    .lang-btn:hover:not(.active) { color: #202124; background: #f1f3f4; }
+    .lang-tab.active { color: #1a73e8; font-weight: 500; }
+    .lang-tab.active::after { opacity: 1; }
+    .lang-tab:hover:not(.active) { background: #f1f3f4; color: #202124; }
     .lang-more {
-      padding: 8px 4px; border: none; background: none; cursor: pointer;
-      color: #5f6368; display: flex; align-items: center; margin-left: auto; flex-shrink: 0;
+      border: none; background: none; cursor: pointer; color: #5f6368;
+      padding: 8px 6px; display: flex; align-items: center; margin-left: auto; flex-shrink: 0;
     }
+    .swap-cell {
+      display: flex; align-items: center; justify-content: center;
+      border-left: 1px solid #e0e0e0; border-right: 1px solid #e0e0e0;
+    }
+    .swap-btn {
+      width: 36px; height: 36px; border-radius: 50%; border: none; background: none;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: #5f6368; transition: background 0.15s;
+    }
+    .swap-btn:hover { background: #f1f3f4; }
+    .swap-btn .material-symbols-outlined { font-size: 20px; }
 
-    /* TEXT AREAS */
-    .panel-body { flex: 1; display: flex; flex-direction: column; }
+    /* PANELS ROW */
+    .panels-row {
+      display: grid; grid-template-columns: 1fr 1fr;
+    }
+    .panel { position: relative; display: flex; flex-direction: column; }
+    .panel-left { border-right: 1px solid #e0e0e0; }
+    .panel-right { background: #f8f9fa; }
+
+    /* CLEAR & STAR buttons */
+    .panel-action {
+      position: absolute; top: 10px; right: 10px;
+      width: 32px; height: 32px; border-radius: 50%; border: none; background: none;
+      cursor: pointer; color: #5f6368; display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s; z-index: 1;
+    }
+    .panel-action:hover { background: #f1f3f4; color: #202124; }
+    .panel-action .material-symbols-outlined { font-size: 18px; }
+    .panel-action.hidden { display: none; }
 
     textarea {
-      flex: 1; width: 100%; min-height: 180px; padding: 16px;
-      font-size: 18px; border: none; outline: none; resize: none;
-      background: transparent; font-family: 'Google Sans', 'Roboto', sans-serif;
-      color: #202124; line-height: 1.6; overflow: hidden;
+      width: 100%; min-height: 200px; padding: 16px 48px 16px 16px;
+      font-size: 18px; border: none; outline: none; resize: none; background: transparent;
+      font-family: 'Google Sans', 'Roboto', sans-serif; color: #202124;
+      line-height: 1.6; overflow: hidden;
     }
     textarea::placeholder { color: #9aa0a6; }
 
     .output-area {
-      flex: 1; min-height: 180px; padding: 16px; font-size: 18px;
-      color: #202124; line-height: 1.6; white-space: pre-wrap;
-      word-break: break-word; align-self: flex-start; width: 100%;
+      min-height: 200px; padding: 16px 48px 16px 16px;
+      font-size: 18px; color: #202124; line-height: 1.6;
+      white-space: pre-wrap; word-break: break-word;
     }
     .output-placeholder { color: #9aa0a6; }
 
-    /* FOOTER */
-    .card-footer {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 8px 12px; border-top: 1px solid #e0e0e0; flex-shrink: 0;
-    }
-    .card-footer-right { background: #f8f9fa; }
-    .footer-left { display: flex; align-items: center; gap: 2px; }
-    .footer-right { display: flex; align-items: center; gap: 2px; }
-    .icon-btn {
-      width: 36px; height: 36px; border-radius: 50%; border: none;
-      background: none; cursor: pointer; display: flex; align-items: center;
-      justify-content: center; color: #5f6368; transition: background 0.15s;
-    }
-    .icon-btn:hover { background: #e8f0fe; color: #1a73e8; }
-    .icon-btn .material-symbols-outlined { font-size: 20px; }
-    .char-count { font-size: 12px; color: #9aa0a6; padding: 0 6px; }
-
-    /* SWAP BUTTON */
-    .swap-col {
-      display: flex; align-items: flex-start; padding-top: 52px;
-      flex-shrink: 0; padding-left: 6px; padding-right: 6px;
-    }
-    .swap-btn {
-      width: 40px; height: 40px; border-radius: 50%; border: 1px solid #dadce0;
-      background: #fff; cursor: pointer; display: flex; align-items: center;
-      justify-content: center; color: #5f6368;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: background 0.15s;
-    }
-    .swap-btn:hover { background: #f1f3f4; }
-
-    /* WAVE DOTS — inline, matches text style */
-    .wave-dots {
-      display: inline-flex; align-items: center; gap: 4px;
-      vertical-align: middle; margin-left: 2px;
-    }
+    /* WAVE DOTS — top-left, matches text */
+    .wave-dots { display: inline-flex; align-items: center; gap: 5px; }
     .wave-dots span {
-      width: 6px; height: 6px; border-radius: 50%; background: #202124;
-      display: inline-block; animation: wave 1.2s ease-in-out infinite;
+      width: 7px; height: 7px; border-radius: 50%; background: #5f6368;
+      animation: wave 1.2s ease-in-out infinite;
     }
-    .wave-dots span:nth-child(1) { animation-delay: 0s; }
     .wave-dots span:nth-child(2) { animation-delay: 0.2s; }
     .wave-dots span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes wave {
-      0%, 60%, 100% { transform: translateY(0); }
-      30% { transform: translateY(-6px); }
+      0%,60%,100% { transform: translateY(0); }
+      30% { transform: translateY(-7px); }
     }
 
     /* CARET */
     .caret {
-      display: inline-block; width: 2px; height: 1.1em;
+      display: inline-block; width: 2px; height: 1em;
       background: #202124; vertical-align: text-bottom;
-      animation: blink 1s infinite;
+      animation: blink 1s step-end infinite;
     }
     @keyframes blink { 50% { opacity: 0; } }
+
+    /* FOOTER */
+    .panel-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 8px 8px 12px; border-top: 1px solid #e0e0e0;
+    }
+    .panel-footer.right { background: #f8f9fa; }
+    .footer-icons { display: flex; align-items: center; gap: 0; }
+    .icon-btn {
+      width: 36px; height: 36px; border-radius: 50%; border: none; background: none;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: #5f6368; transition: background 0.15s;
+    }
+    .icon-btn:hover { background: #e8f0fe; color: #1a73e8; }
+    .icon-btn .material-symbols-outlined { font-size: 20px; }
+    .char-count { font-size: 12px; color: #9aa0a6; padding: 0 8px; }
+
+    /* SEND FEEDBACK */
+    .send-feedback {
+      text-align: right; font-size: 12px; color: #5f6368;
+      margin-top: 8px; cursor: pointer;
+    }
+    .send-feedback:hover { text-decoration: underline; }
 
     /* TOAST */
     .toast {
@@ -155,17 +167,18 @@
 
     /* RESPONSIVE */
     @media (max-width: 640px) {
-      .main { flex-direction: column; gap: 12px; margin: 16px auto; }
-      .swap-col { display: none; }
-      .card { width: 100%; }
-      .navbar { padding: 8px 12px; }
-      .logo { font-size: 18px; }
+      .lang-row { grid-template-columns: 1fr 40px 1fr; }
+      .panels-row { grid-template-columns: 1fr; }
+      .panel-left { border-right: none; border-bottom: 1px solid #e0e0e0; }
+      textarea, .output-area { font-size: 16px; }
+      .lang-tab { font-size: 13px; padding: 11px 8px 9px; }
+      .page { margin: 16px auto; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAVBAR -->
+  <!-- NAV -->
   <nav class="navbar">
     <div class="logo">
       <span class="c1">L</span><span class="c2">i</span><span class="c3">n</span><span class="c4">k</span><span class="c5">e</span><span class="c6">d</span><span class="crest">In Translate</span>
@@ -177,100 +190,123 @@
     </div>
   </nav>
 
-  <!-- MAIN -->
-  <div class="main">
-
-    <!-- LEFT CARD -->
+  <div class="page">
     <div class="card">
-      <div class="lang-bar">
-        <button class="lang-btn active">Detect language</button>
-        <button class="lang-more"><span class="material-symbols-outlined" style="font-size:18px">expand_more</span></button>
-      </div>
-      <div class="panel-body">
-        <textarea id="input" placeholder="Enter text" maxlength="500"></textarea>
-      </div>
-      <div class="card-footer">
-        <div class="footer-left">
-          <button class="icon-btn"><span class="material-symbols-outlined">mic</span></button>
-          <button class="icon-btn"><span class="material-symbols-outlined">image</span></button>
+
+      <!-- LANG ROW -->
+      <div class="lang-row">
+        <div class="lang-tabs">
+          <button class="lang-tab active">Detect language</button>
+          <button class="lang-more"><span class="material-symbols-outlined" style="font-size:20px">expand_more</span></button>
         </div>
-        <div class="footer-right">
-          <span class="char-count" id="charCount">0 / 500</span>
-          <button class="icon-btn"><span class="material-symbols-outlined">edit</span></button>
+        <div class="swap-cell">
+          <button class="swap-btn"><span class="material-symbols-outlined">swap_horiz</span></button>
         </div>
+        <div class="lang-tabs right">
+          <button class="lang-tab active" data-tone="default">LinkedIn</button>
+          <button class="lang-tab" data-tone="hustle">Hustle Bro</button>
+          <button class="lang-tab" data-tone="zen">Mindful Guru</button>
+          <button class="lang-tab" data-tone="corporate">Corporate</button>
+          <button class="lang-more"><span class="material-symbols-outlined" style="font-size:20px">expand_more</span></button>
+        </div>
+      </div>
+
+      <!-- PANELS -->
+      <div class="panels-row">
+
+        <!-- LEFT -->
+        <div class="panel panel-left">
+          <button id="clearBtn" class="panel-action hidden" onclick="clearInput()">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+          <textarea id="input" placeholder="Enter text" maxlength="500"></textarea>
+          <div class="panel-footer">
+            <div class="footer-icons">
+              <button class="icon-btn"><span class="material-symbols-outlined">mic</span></button>
+              <button class="icon-btn"><span class="material-symbols-outlined">volume_up</span></button>
+            </div>
+            <div style="display:flex;align-items:center">
+              <span class="char-count" id="charCount">0 / 500</span>
+              <button class="icon-btn"><span class="material-symbols-outlined">edit</span></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="panel panel-right">
+          <button class="panel-action" id="starBtn">
+            <span class="material-symbols-outlined">star_border</span>
+          </button>
+          <div id="output" class="output-area">
+            <span class="output-placeholder">Translation</span>
+          </div>
+          <div class="panel-footer right">
+            <div class="footer-icons">
+              <button class="icon-btn"><span class="material-symbols-outlined">volume_up</span></button>
+              <button id="copyBtn" class="icon-btn" onclick="copyText()">
+                <span class="material-symbols-outlined">content_copy</span>
+              </button>
+              <button class="icon-btn"><span class="material-symbols-outlined">share</span></button>
+              <button class="icon-btn"><span class="material-symbols-outlined">thumb_up</span></button>
+              <button class="icon-btn"><span class="material-symbols-outlined">thumb_down</span></button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <!-- SWAP -->
-    <div class="swap-col">
-      <button class="swap-btn">
-        <span class="material-symbols-outlined" style="font-size:20px">swap_horiz</span>
-      </button>
-    </div>
-
-    <!-- RIGHT CARD -->
-    <div class="card card-right">
-      <div class="lang-bar lang-bar-right">
-        <button class="lang-btn active" data-tone="default">LinkedIn</button>
-        <button class="lang-btn" data-tone="hustle">Hustle Bro</button>
-        <button class="lang-btn" data-tone="zen">Mindful Guru</button>
-        <button class="lang-btn" data-tone="corporate">Corporate</button>
-        <button class="lang-more"><span class="material-symbols-outlined" style="font-size:18px">expand_more</span></button>
-      </div>
-      <div class="panel-body">
-        <div id="output" class="output-area">
-          <span class="output-placeholder">Translation</span>
-        </div>
-      </div>
-      <div class="card-footer card-footer-right">
-        <div class="footer-left">
-          <button id="copyBtn" class="icon-btn" onclick="copyText()"><span class="material-symbols-outlined">content_copy</span></button>
-          <button class="icon-btn"><span class="material-symbols-outlined">volume_up</span></button>
-          <button class="icon-btn"><span class="material-symbols-outlined">share</span></button>
-        </div>
-        <div class="footer-right">
-          <button class="icon-btn"><span class="material-symbols-outlined">thumb_up</span></button>
-          <button class="icon-btn"><span class="material-symbols-outlined">thumb_down</span></button>
-        </div>
-      </div>
-    </div>
-
+    <div class="send-feedback">Send feedback</div>
   </div>
 
-  <!-- TOAST -->
   <div class="toast" id="toast">Translation copied</div>
 
   <script>
     const inputEl  = document.getElementById("input");
     const outputEl = document.getElementById("output");
     const charCount = document.getElementById("charCount");
+    const clearBtn = document.getElementById("clearBtn");
     const copyBtn  = document.getElementById("copyBtn");
     const toast    = document.getElementById("toast");
     let selectedTone = "default";
     let debounceTimer;
 
     // Auto-grow textarea
-    inputEl.addEventListener("input", () => {
+    function resizeTextarea() {
       inputEl.style.height = "auto";
-      inputEl.style.height = inputEl.scrollHeight + "px";
+      inputEl.style.height = Math.max(200, inputEl.scrollHeight) + "px";
+    }
+
+    inputEl.addEventListener("input", () => {
+      resizeTextarea();
       charCount.innerText = `${inputEl.value.length} / 500`;
+      clearBtn.classList.toggle("hidden", inputEl.value.length === 0);
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(generatePost, 1500);
     });
 
     // Tone tabs
-    document.querySelectorAll(".lang-btn[data-tone]").forEach(btn => {
+    document.querySelectorAll(".lang-tab[data-tone]").forEach(btn => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll(".lang-btn[data-tone]").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".lang-tab[data-tone]").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         selectedTone = btn.dataset.tone;
         if (inputEl.value.trim()) generatePost();
       });
     });
 
-    document.addEventListener("keydown", (e) => {
+    document.addEventListener("keydown", e => {
       if (e.ctrlKey && e.key === "Enter") generatePost();
     });
+
+    function clearInput() {
+      inputEl.value = "";
+      inputEl.style.height = "200px";
+      charCount.innerText = "0 / 500";
+      clearBtn.classList.add("hidden");
+      outputEl.innerHTML = `<span class="output-placeholder">Translation</span>`;
+      clearTimeout(debounceTimer);
+    }
 
     async function generatePost() {
       const input = inputEl.value.trim();
@@ -278,8 +314,7 @@
         outputEl.innerHTML = `<span class="output-placeholder">Translation</span>`;
         return;
       }
-      // Show wave dots at top
-      outputEl.innerHTML = `<span class="wave-dots"><span></span><span></span><span></span></span>`;
+      outputEl.innerHTML = `<div class="wave-dots"><span></span><span></span><span></span></div>`;
       try {
         const res = await fetch("/api/translate", {
           method: "POST",
@@ -296,13 +331,10 @@
     function typeEffect(text) {
       outputEl.innerHTML = "";
       let i = 0;
-      const interval = setInterval(() => {
+      const iv = setInterval(() => {
         outputEl.innerHTML = text.slice(0, i) + "<span class='caret'></span>";
         i++;
-        if (i > text.length) {
-          clearInterval(interval);
-          outputEl.innerText = text;
-        }
+        if (i > text.length) { clearInterval(iv); outputEl.innerText = text; }
       }, 12);
     }
 
@@ -310,15 +342,10 @@
       const text = outputEl.innerText.trim();
       if (!text || text === "Translation") return;
       navigator.clipboard.writeText(text).then(() => {
-        showToast();
+        toast.classList.add("show");
+        clearTimeout(window._toastTimer);
+        window._toastTimer = setTimeout(() => toast.classList.remove("show"), 2500);
       });
-    }
-
-    let toastTimer;
-    function showToast() {
-      toast.classList.add("show");
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toast.classList.remove("show"), 2500);
     }
   </script>
 </body>
