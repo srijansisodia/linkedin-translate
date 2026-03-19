@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LinkedIn Translate</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Roboto', sans-serif; }
+    .material-symbols-outlined {
+      font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
+    }
+    .panel { position: relative; }
+    .panel::after {
+      content: "";
+      position: absolute;
+      left: 0; bottom: 0;
+      height: 2px; width: 0%;
+      background: #1a73e8;
+      transition: width 0.25s ease;
+    }
+    .panel.active::after { width: 100%; }
+    .icon:hover { color: black; }
+    .ripple { position: relative; overflow: hidden; }
+    .ripple:after {
+      content: "";
+      position: absolute;
+      width: 100px; height: 100px;
+      background: rgba(0,0,0,0.1);
+      border-radius: 50%;
+      transform: scale(0); opacity: 0;
+    }
+    .ripple:active:after {
+      transform: scale(2); opacity: 1;
+      transition: transform 0.4s, opacity 0.8s;
+    }
+    /* shimmer */
+    .shimmer {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s infinite;
+      color: transparent;
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .caret {
+      display: inline-block;
+      width: 1px;
+      background: black;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+  </style>
+</head>
+<body class="bg-[#f8f9fa] min-h-screen">
+  <div class="bg-white border-b h-14 flex items-center px-6 justify-between">
+    <div class="text-[20px] text-gray-700 tracking-tight">LinkedIn Translate</div>
+    <select id="tone" class="text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none">
+      <option value="default">Default</option>
+      <option value="hustle">Hustle Bro</option>
+      <option value="zen">Mindful Guru</option>
+      <option value="corporate">Corporate Strategist</option>
+    </select>
+  </div>
+  <div class="max-w-6xl mx-auto mt-12">
+    <div class="border border-gray-300 rounded-lg bg-white overflow-hidden">
+      <div class="flex items-center text-sm text-gray-600 border-b">
+        <div class="flex-1 px-4 py-3 border-r">Detect language</div>
+        <div class="px-2">
+          <button class="p-2 rounded-full hover:bg-gray-100 transition ripple">
+            <span class="material-symbols-outlined text-gray-600 text-[18px]">swap_horiz</span>
+          </button>
+        </div>
+        <div class="flex-1 px-4 py-3">LinkedIn</div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2">
+        <div id="inputPanel" class="panel border-r">
+          <textarea id="input" class="w-full h-[320px] p-4 text-[18px] outline-none resize-none" placeholder="Enter text"></textarea>
+          <div class="absolute bottom-2 left-3 flex gap-4 text-gray-500">
+            <span class="material-symbols-outlined icon cursor-pointer">keyboard</span>
+            <span class="material-symbols-outlined icon cursor-pointer">mic</span>
+          </div>
+          <div class="absolute bottom-2 right-3 text-xs text-gray-400" id="charCount">0 / 500</div>
+        </div>
+        <div id="outputPanel" class="panel bg-[#f8f9fa]">
+          <div id="output" class="p-4 h-[320px] text-[18px] whitespace-pre-line overflow-auto"></div>
+          <div class="absolute bottom-2 left-3 flex gap-4 text-gray-500">
+            <span onclick="copyText()" class="material-symbols-outlined icon cursor-pointer">content_copy</span>
+            <span class="material-symbols-outlined icon cursor-pointer">volume_up</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+  <script>
+    const inputEl = document.getElementById("input");
+    const outputEl = document.getElementById("output");
+    const charCount = document.getElementById("charCount");
+    const inputPanel = document.getElementById("inputPanel");
+    const clickSound = document.getElementById("clickSound");
+    let debounceTimer;
+    inputEl.addEventListener("focus", () => inputPanel.classList.add("active"));
+    inputEl.addEventListener("blur", () => inputPanel.classList.remove("active"));
+    inputEl.addEventListener("input", () => {
+      charCount.innerText = `${inputEl.value.length} / 500`;
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(generatePost, 200 + Math.random()*200);
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.ctrlKey && e.key === "Enter") generatePost();
+    });
+    async function generatePost() {
+      const input = inputEl.value;
+      const tone = document.getElementById("tone").value;
+      if (!input) { outputEl.innerText = ""; return; }
+      outputEl.innerHTML = `<span class='shimmer'>Translating...</span>`;
+      const res = await fetch("/api/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ input, tone })
+      });
+      const data = await res.json();
+      typeEffect(data.output || "Something went wrong.");
+    }
+    function typeEffect(text) {
+      outputEl.innerHTML = "";
+      let i = 0;
+      const interval = setInterval(() => {
+        outputEl.innerHTML = text.slice(0, i) + "<span class='caret'>&nbsp;</span>";
+        i++;
+        if (i > text.length) {
+          clearInterval(interval);
+          outputEl.innerText = text;
+        }
+      }, 10);
+    }
+    function copyText() {
+      navigator.clipboard.writeText(outputEl.innerText);
+      clickSound.play();
+    }
+  </script>
+</body>
+</html>
