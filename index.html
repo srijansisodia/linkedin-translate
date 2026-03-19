@@ -36,7 +36,6 @@
       transform: scale(2); opacity: 1;
       transition: transform 0.4s, opacity 0.8s;
     }
-    /* shimmer */
     .shimmer {
       background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
       background-size: 200% 100%;
@@ -75,8 +74,10 @@
             <span class="material-symbols-outlined text-gray-600 text-[18px]">swap_horiz</span>
           </button>
         </div>
-        <div class="flex-1 px-4 py-3">LinkedIn</div>
-        <button onclick="generatePost()" class="mx-3 px-4 py-1 bg-[#1a73e8] text-white text-sm rounded hover:bg-[#1557b0] transition ripple">Translate</button>
+        <div class="flex-1 px-4 py-3 flex items-center justify-between">
+          <span>LinkedIn</span>
+          <button onclick="generatePost()" class="px-4 py-1 bg-[#1a73e8] text-white text-sm rounded hover:bg-[#1557b0] transition ripple">Translate</button>
+        </div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2">
         <div id="inputPanel" class="panel border-r">
@@ -90,7 +91,7 @@
         <div id="outputPanel" class="panel bg-[#f8f9fa]">
           <div id="output" class="p-4 h-[320px] text-[18px] whitespace-pre-line overflow-auto"></div>
           <div class="absolute bottom-2 left-3 flex gap-4 text-gray-500">
-            <span onclick="copyText()" class="material-symbols-outlined icon cursor-pointer">content_copy</span>
+            <span id="copyBtn" onclick="copyText()" class="material-symbols-outlined icon cursor-pointer">content_copy</span>
             <span class="material-symbols-outlined icon cursor-pointer">volume_up</span>
           </div>
         </div>
@@ -104,27 +105,38 @@
     const charCount = document.getElementById("charCount");
     const inputPanel = document.getElementById("inputPanel");
     const clickSound = document.getElementById("clickSound");
+    const copyBtn = document.getElementById("copyBtn");
+    let debounceTimer;
+
     inputEl.addEventListener("focus", () => inputPanel.classList.add("active"));
     inputEl.addEventListener("blur", () => inputPanel.classList.remove("active"));
     inputEl.addEventListener("input", () => {
       charCount.innerText = `${inputEl.value.length} / 500`;
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(generatePost, 1500);
     });
     document.addEventListener("keydown", (e) => {
       if (e.ctrlKey && e.key === "Enter") generatePost();
     });
+
     async function generatePost() {
       const input = inputEl.value;
       const tone = document.getElementById("tone").value;
       if (!input) { outputEl.innerText = ""; return; }
       outputEl.innerHTML = `<span class='shimmer'>Translating...</span>`;
-      const res = await fetch("/api/translate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ input, tone })
-      });
-      const data = await res.json();
-      typeEffect(data.output || "Something went wrong.");
+      try {
+        const res = await fetch("/api/translate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ input, tone })
+        });
+        const data = await res.json();
+        typeEffect(data.output || "Something went wrong.");
+      } catch (err) {
+        outputEl.innerText = "Network error. Please try again.";
+      }
     }
+
     function typeEffect(text) {
       outputEl.innerHTML = "";
       let i = 0;
@@ -137,9 +149,15 @@
         }
       }, 10);
     }
+
     function copyText() {
-      navigator.clipboard.writeText(outputEl.innerText);
-      clickSound.play();
+      const text = outputEl.innerText.trim();
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        copyBtn.innerText = "check";
+        clickSound.play();
+        setTimeout(() => { copyBtn.innerText = "content_copy"; }, 2000);
+      });
     }
   </script>
 </body>

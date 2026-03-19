@@ -12,10 +12,18 @@ export default async function handler(req, res) {
     corporate: "Corporate strategist using buzzwords",
   };
 
-  const prompt = `Convert this real-life incident into a cliché LinkedIn post.
+  const prompt = `Convert this real-life incident into a single cliché LinkedIn post.
 Tone: ${toneGuide[tone] || toneGuide.default}
 Input: ${input}
-Make it dramatic, insightful, and add relevant hashtags. Keep it under 300 words.`;
+
+Rules:
+- Write exactly ONE post, no options or alternatives
+- Plain text only — no markdown, no bold, no asterisks, no backslashes
+- Use real # symbols for hashtags (e.g. #Growth not \\#Growth)
+- Keep it under 200 words
+- End with 4-6 relevant hashtags on a new line
+
+Return a JSON object with a single field: { "post": "..." }`;
 
   console.log(`[translate] called — tone: ${tone}, input length: ${input?.length}`);
 
@@ -25,7 +33,10 @@ Make it dramatic, insightful, and add relevant hashtags. Keep it under 300 words
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { responseMimeType: "application/json" }
+        })
       }
     );
     const data = await response.json();
@@ -33,7 +44,9 @@ Make it dramatic, insightful, and add relevant hashtags. Keep it under 300 words
       console.error(`[translate] Gemini error ${response.status}:`, JSON.stringify(data.error));
       return res.status(200).json({ output: `Gemini error: ${JSON.stringify(data.error)}` });
     }
-    const output = data.candidates?.[0]?.content?.parts?.[0]?.text || "Something went wrong";
+    const raw = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const parsed = JSON.parse(raw);
+    const output = parsed.post || "Something went wrong";
     console.log(`[translate] success — output length: ${output.length}`);
     res.status(200).json({ output });
   } catch (err) {
